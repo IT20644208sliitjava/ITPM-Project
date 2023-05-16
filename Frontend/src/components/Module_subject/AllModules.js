@@ -12,7 +12,7 @@ import { Modal, Button , Form } from 'react-bootstrap';
 import { Trash , PencilFill} from 'react-bootstrap-icons';
 
 
-import Header from './Header';
+import Header from '../Header';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -69,6 +69,15 @@ const AllModule = () => {
             return formattedDate;
           }
     },
+    {
+      dataField: 'uploader',
+      text: 'Uploader',
+      sort: true,
+      headerAlign: 'center',
+      align: 'center',
+      headerStyle: { backgroundColor: 'black', color: 'white', paddingTop: '10px', paddingBottom: '10px' },
+      style: { paddingTop: '10px', paddingBottom: '10px' }
+    },
     
     {
         dataField: 'actions',
@@ -81,7 +90,6 @@ const AllModule = () => {
         <div>
             <button className="btn btn-success" onClick={() => handleEditClick(row)}><PencilFill/></button>&nbsp;
             <button className="btn btn-danger ml-2" onClick={() => handleDeleteClick(row._id)}><Trash/></button>&nbsp;
-            <button className="btn btn-warning ml-2" onClick={() => handleAttempClick(row)}>Attemp</button>
         </div>
         )
     }
@@ -96,20 +104,6 @@ const AllModule = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-
-    const [number, setModuleNumber] = useState("");
-    const [name, setModuleName] = useState("");
-    const [code, setModuleCode] = useState("");
-    const [Datet, sendDatet] = useState("");
-    const [tmark, setTotalMarks] = useState("");
-    const [uploader, setUploader] = useState("");
-    const [docid, setDocId] = useState("");
 
     useEffect(() => {
         getData();
@@ -129,22 +123,12 @@ const AllModule = () => {
         });
     }
 
-    function handleAttempClick(data){
-        window.location.href='./AttempNotice';
-        localStorage.setItem('module', JSON.stringify(data));
-
-    }
 
     function handleEditClick(data){
         console.log(data);
-        setModuleNumber(data.number);
-        setModuleName(data.name);
-        setModuleCode(data.code);
-        sendDatet(data.Datet);
-        setTotalMarks(data.tmark);
-        setUploader(data.uploader);
-        setDocId(data._id);
-        handleShow();
+        localStorage.setItem("update_moduel", JSON.stringify(data));
+        window.location.href="./UpdateModule";
+  
     }
 
     function handleDeleteClick(id) {
@@ -239,125 +223,12 @@ const AllModule = () => {
   }
   
 
-  function update_module(){
-    Swal.fire({
-        title: 'Are you sure you want to update this module?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Update',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios.put(`http://localhost:5070/module1/updateModule/${docid}`, { name, tmark })
-            .then((response) => {
-              console.log(response.data); // handle success response
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Module updated successfully',
-                    showConfirmButton: false,
-                    timer: 1500,
-                }).then((result) => {
-                    getData();
-                    setShow(false);
-                });
-            })
-            .catch((error) => {
-              console.log(error); // handle error response
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-              });
-            });
-        }
-      });
-    }
 
   return (
     <div>
     <Header/>
     <div className="container">
-       <Modal show={show} onHide={handleClose} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Module</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <Form>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Module Number:</Form.Label>
-                    <Form.Control type="text" placeholder="Module number"
-                    value={number}
-                    disabled
-                    onChange={(e)=>{
-                        setModuleNumber(e.target.value);
-                    }}
-                    
-                    />
-                </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Module Name:</Form.Label>
-            <Form.Control type="text" placeholder="Module name" 
-                value={name}
-                onChange={(e)=>{
-                    setModuleName(e.target.value);
-                }}/>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Module Code:</Form.Label>
-            <Form.Control type="text" placeholder="Module code" 
-                value={code}
-                disabled
-                onChange={(e)=>{
-                setModuleCode(e.target.value);
-            }}/>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Total Marks for the Module:</Form.Label>
-            <Form.Control type="text" placeholder="Total marks"
-                
-                value={tmark}
-                onChange={(e)=>{
-                    setTotalMarks(e.target.value);
-                }}/>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Date:</Form.Label>
-            <Form.Control type="text" placeholder="Created date" 
-                disabled
-                value={Datet}
-                onChange={(e)=>{
-                sendDatet(e.target.value);
-                }}/>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Creater:</Form.Label>
-            <Form.Control type="text" placeholder="The module Uploded by" 
-            disabled
-            value={uploader}
-            onChange={(e)=>{
-                setUploader(e.target.value);
-            }} />
-            </Form.Group>
-            
-           
-        </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="success"  onClick={update_module}>
-            Update Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      
       <h3 className="text-left my-4">Module List</h3>
       <hr/>
       <div className='p-4 rounded mb-2' style={{backgroundColor:'#D9DCD4'}}>

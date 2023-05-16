@@ -3,13 +3,13 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import Header from "./Header";
+import Header from "../Header";
 
  function AddModule(){
 
 
     function cancel(){
-      window.location.href='./AllModules';
+      window.location.href='./StudentModule';
     }
     const [moduleName, setModuleName] = useState("");
     const [moduleCode, setModuleCode] = useState("");
