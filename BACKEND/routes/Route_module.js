@@ -1,5 +1,5 @@
 const router = require("express").Router();
-let Module = require("../models/Route_modules");
+let Module = require("../models/Model_modules");
 
 router.route("/addModule").post((req, res) =>{
 
@@ -28,9 +28,9 @@ router.route("/getAllData").get((req,res) => {
 
 router.route("/updateModule/:id").put(async(req,res)=>{
     let mId = req.params.id;
-    const { name, tmark} = req.body;
+    const { name, tmark , Datet , uploader} = req.body;
 
-    const updateModule = { name, tmark}
+    const updateModule = { name, tmark , Datet , uploader}
     
     const update = await Module.findByIdAndUpdate(mId, updateModule).then(()=>{res.status(200).send({status: "User Updated"})
     }).catch((err) => {

@@ -31,6 +31,12 @@ connection.once("open", () => {
 const moduleRouter = require("./routes/Route_module.js")
 app.use("/module1",moduleRouter);
 
+const exam = require('./routes/Route_Exam.js');
+app.use('/exam', exam);
+
+const onequestion = require('./routes/Route_one_question.js');
+app.use('/oneQuestion', onequestion);
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on port number: ${PORT}`)
 })
